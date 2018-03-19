@@ -4,84 +4,90 @@
 <head>
   <meta charset="utf-8">
   <title>Angularjs course</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
-<body>
-  <header>
-    <div ng-controller="RootController as root">
-      {{ root.title }}
-    </div>
-  </header>
-
-  <div class="page-container">
-    <aside class="pizza-sidebar">
-      <p class="slogan">Do you want a pizza me?</p>
-    </aside>
-
-    <div class="content">
+<body ng-cloak layout="column" ng-controller="RootController as root">
+  <md-toolbar layout="row" class="md-toolbar-tools">
+    <md-button class="menu md-icon-button" hide-gt-sm ng-click="root.toggleMenu()" aria-label="Show User List">
+      <md-icon>menu</md-icon>
+    </md-button>
+    <h1>{{ root.title }}</h1>
+  </md-toolbar>
+  <div flex layout="row">
+    <md-sidenav class="md-whiteframe-4dp" md-is-locked-open="$mdMedia('gt-sm')" md-component-id="left" ng-click="root.toggleList()">
+      <!-- menu items-->
+    </md-sidenav>
+    <md-content flex id="content">
       <div ng-controller="PizzeriaController as pizzeriaController">
-        <h2>Pizza choices:</h2>
-        <ul>
-          <li ng-repeat="pizza in pizzeriaController.pizzas | realPizzasOnly" ng-click="pizzeriaController.onPizzaClick(pizza)">{{ pizza.name }}</li>
-        </ul>
+        <md-card>
+          <md-card-title>
+            <md-card-title-text>
+              <span class="md-headline">Pizza choices</span>
+            </md-card-title-text>
+          </md-card-title>
+          <md-card-content>
+            <md-list>
+              <md-list-item ng-repeat="pizza in pizzeriaController.pizzas | realPizzasOnly" ng-click="pizzeriaController.onPizzaClick(pizza)">{{ pizza.name }}</md-list-item>
+            </md-list>
+          </md-card-content>
+        </md-card>
 
         <app-pizza ng-show="pizzeriaController.selectedPizza" pizza="pizzeriaController.selectedPizza"></app-pizza>
 
-        <hr>
-        <div class="pizza-new">
-          <h2>New pizza: </h2>
-          <form name="pizzeriaController.newPizzaForm" novalidate>
-            <div>
-              <label>
-                Name:
-                <input type="text" name="name" ng-model="newPizza.name" required focus />
-              </label>
-              <div ng-show="pizzeriaController.newPizzaForm.$submitted || pizzeriaController.newPizzaForm.name.$touched">
-                <span ng-show="pizzeriaController.newPizzaForm.name.$error.required">Give your pizza a name.</span>
-              </div>
-            </div>
-            <div>
-              <label>
-                Description:
-                <input type="textarea" name="description" ng-model="newPizza.description" required ng-minlength="5" ng-maxlength="50" />
-              </label>
-              <div ng-show="pizzeriaController.newPizzaForm.$submitted || pizzeriaController.newPizzaForm.description.$touched">
-                <span ng-show="pizzeriaController.newPizzaForm.description.$error.required">Give your pizza a description.</span>
-                <span ng-show="pizzeriaController.newPizzaForm.description.$error.minlength">Pizza description needs to be at least 5 characters long.</span>
-                <span ng-show="pizzeriaController.newPizzaForm.description.$error.maxlength">Pizza description can't be more than 50 characters long.</span>
-              </div>
-            </div>
-            <div>
-              <label ng-repeat="ingredient in pizzeriaController.ingredients">
-                <input type="checkbox" name="ingredients" value="{{ingredient.name}}" ng-model="ingredient.selected" ng-required="pizzeriaController.isAnIngredientSelected()"> {{ingredient.name}}
-              </label>
-              <div ng-show="pizzeriaController.newPizzaForm.$submitted || pizzeriaController.newPizzaForm.ingredients.$touched">
-                <span ng-show="!pizzeriaController.isAnIngredientSelected()">At least one ingredient needs to be selected.</span>
-              </div>
-            </div>
-            <div>
-              <label>
-                Base Price:
-                <select name="basePrice" ng-model="newPizza.basePrice" required>
-                  <option value="">--- Please select ---</option>
-                  <option value="5">5 euro</option>
-                  <option value="6.5">6.5 euro</option>
-                  <option value="8">8euro </option>
-                </select>
-              </label>
-              <div ng-show="pizzeriaController.newPizzaForm.$submitted || pizzeriaController.newPizzaForm.basePrice.$touched">
-                <span ng-show="pizzeriaController.newPizzaForm.basePrice.$error.required">Give your pizza a base price.</span>
-              </div>
-            </div>
-            <div>
-              <input type="submit" ng-click="pizzeriaController.onAddPizza(newPizza)" />
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
+        <md-card>
+          <md-card-title>
+            <md-card-title-text>
+              <span class="md-headline">New pizza</span>
+            </md-card-title-text>
+          </md-card-title>
+          <md-card-content>
+            <div class="pizza-new">
+              <form name="pizzeriaController.newPizzaForm" novalidate ng-model-options="{updateOn: 'default blur',debounce: { default: 500, blur: 0 } }">
+                <md-input-container class="md-block">
+                  <label>Name</label>
+                  <input type="text" name="name" ng-model="newPizza.name" required focus />
 
+                  <div ng-messages="pizzeriaController.newPizzaForm.name.$error" role="alert">
+                    <div ng-message="required">Give your pizza a name.</div>
+                  </div>
+                </md-input-container>
+                <md-input-container class="md-block">
+                  <label>Description</label>
+                  <input type="textarea" name="description" ng-model="newPizza.description" required ng-minlength="5" ng-maxlength="50" />
+                  <div ng-messages="pizzeriaController.newPizzaForm.description.$error" role="alert">
+                    <div ng-message="required">Give your pizza a description.</div>
+                    <div ng-message="minlength">Pizza description needs to be at least 5 characters long.</div>
+                    <div ng-message="maxlength">Pizza description can't be more than 50 characters long.</div>
+                  </div>
+                </md-input-container>
+                <md-input-container class="md-block">
+                  <md-checkbox ng-repeat="ingredient in pizzeriaController.ingredients" ng-model="ingredient.selected" ng-required="pizzeriaController.isAnIngredientSelected()">
+                    {{ingredient.name}}
+                  </md-checkbox>
+                  <div class="md-input-message-animation" ng-show="pizzeriaController.newPizzaForm.$submitted || pizzeriaController.newPizzaForm.ingredients.$touched">
+                    <span ng-show="!pizzeriaController.isAnIngredientSelected()">At least one ingredient needs to be selected.</span>
+                  </div>
+                </md-input-container>
+                <md-input-container class="md-block">
+                  <md-radio-group ng-model="newPizza.basePrice" required>
+                    <md-radio-button value="">--- Please select base price ---</md-radio-button>
+                    <md-radio-button value="5"> 5 EUR </md-radio-button>
+                    <md-radio-button value="6.5">6.5 EUR</md-radio-button>
+                    <md-radio-button value="8">8 EUR</md-radio-button>
+                  </md-radio-group>
+                  <div ng-messages="pizzeriaController.newPizzaForm.basePrice.$error" role="alert">
+                    <div ng-message="required">Give your pizza a base price.</div>
+                  </div>
+                </md-input-container>
+                <md-button type="submit" class="md-raised md-primary" ng-click="pizzeriaController.onAddPizza(newPizza)">Add pizza</md-button>
+              </form>
+            </div>
+          </md-card-content>
+        </md-card>
+      </div>
+    </md-content>
+  </div>
   <script src="bundle.js"></script>
 </body>
 

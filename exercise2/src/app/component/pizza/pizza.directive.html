@@ -1,7 +1,15 @@
-<div class="pizza-info">
-    <h2>Selected pizza: </h2>
-    <p>
-      <strong>Name:</strong> {{ pizza.name }}</p>
-    <p>
-      <strong>Description:</strong> {{ pizza.description }}</p>
-  </div>
+<md-card>
+  <md-card-title>
+    <md-card-title-text>
+      <span class="md-headline">Selected pizza</span>
+    </md-card-title-text>
+  </md-card-title>
+  <md-card-content>
+    <div class="pizza-info">
+      <p>
+        <strong>Name:</strong> {{ pizza.name }}</p>
+      <p>
+        <strong>Description:</strong> {{ pizza.description }}</p>
+    </div>
+  </md-card-content>
+</md-card>
