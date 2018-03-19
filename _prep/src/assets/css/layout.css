@@ -1,0 +1,56 @@
+strong {
+    font-weight: bold;
+}
+
+h2 {
+    font-size: 1.6rem;
+    margin-bottom: 2rem;
+}
+
+ul {
+    list-style: disc;
+    list-style-position: inside;
+    text-indent: 2rem;
+}
+li {
+    cursor: pointer;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    font-family: 'Helvetica';
+    font-size: 1.4rem;
+}
+
+.page-container {
+    display: grid;
+    grid-template-columns: 30% auto;
+}
+
+header {
+   background-color: #64c1ac;
+   color: white; 
+   font-size: 2.5rem;
+   padding: 2rem;
+}
+
+.pizza-sidebar {
+    position: relative;
+    background-color: #333538;
+    color: white;
+    height: 100vh;
+}
+
+.pizza-sidebar .slogan {
+    margin-top: 10rem;
+    padding: 5rem;
+    font-size: 7rem;
+    font-family: 'Impact';
+}
+
+.content {
+    padding: 3rem;
+}

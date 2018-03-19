@@ -1,17 +1,42 @@
+var path = require('path');
+
 module.exports = {
-    entry: './src/bootstrap.ts',
-    output: require('./webpack/options/output')(__dirname),
-    module: {
-        rules: [
-            require('./webpack/rules/css-rule'),
-            require('./webpack/rules/html-rule'),
-            require('./webpack/rules/png-rule'),
-            require('./webpack/rules/ts-rule')
-        ]
+    entry: './src/bootstrap.js',
+
+    output: {
+        path: __dirname + '/dist',
+        filename: 'bundle.js'
     },
     resolve: {
-        extensions: ['.ts', '.js']
+        modules: [ 
+            path.resolve('./src'),
+            "node_modules"
+        ],
+        extensions: ['.js']
     },
-    devServer: require('./webpack/options/dev-server')(__dirname),
-    devtool: 'source-map'
+    module: {
+        rules: [
+            {   
+                test: /\.css$/, 
+                use: [
+                    "style-loader",
+                    "css-loader"
+                ]
+            },
+            { 
+                test: /\.html$/, 
+                loader: 'html-loader'
+            },
+            {
+                test: /\.png$/,
+                loader: "url-loader",
+                query: { mimetype: "image/png" }
+            }
+        ]
+    },
+    devServer: {
+        contentBase: path.join(__dirname, "src"),
+        compress: false,
+        port: 9000,
+    }
 }
