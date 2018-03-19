@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en" ng-app="app">
+
+<head>
+  <meta charset="utf-8">
+  <title>Angularjs course</title>
+</head>
+
+<body>
+  <header>
+    <div ng-controller="RootController as root">
+      {{ root.title }}
+    </div>
+  </header>
+
+  <div class="page-container">
+    <aside class="pizza-sidebar">
+      <p class="slogan">Do you want a pizza me?</p>
+    </aside>
+
+    <div class="content">
+      <div ng-controller="PizzeriaController as pizzeriaController">
+        <h2>Pizza choices:</h2>
+        <ul>
+          <li ng-repeat="pizza in pizzeriaController.pizzas | realPizzasOnly" ng-click="pizzeriaController.onPizzaClick(pizza)">{{ pizza.name }}</li>
+        </ul>
+
+        <app-pizza ng-show="pizzeriaController.selectedPizza" pizza="pizzeriaController.selectedPizza"></app-pizza>
+
+        <hr>
+        <div class="pizza-new">
+          <h2>New pizza: </h2>
+          <form name="pizzeriaController.newPizzaForm" novalidate>
+            <div>
+              <label>
+                Name:
+                <input type="text" name="name" ng-model="newPizza.name" required focus />
+              </label>
+              <div ng-show="pizzeriaController.newPizzaForm.$submitted || pizzeriaController.newPizzaForm.name.$touched">
+                <span ng-show="pizzeriaController.newPizzaForm.name.$error.required">Give your pizza a name.</span>
+              </div>
+            </div>
+            <div>
+              <label>
+                Description:
+                <input type="textarea" name="description" ng-model="newPizza.description" required ng-minlength="5" ng-maxlength="50" />
+              </label>
+              <div ng-show="pizzeriaController.newPizzaForm.$submitted || pizzeriaController.newPizzaForm.description.$touched">
+                <span ng-show="pizzeriaController.newPizzaForm.description.$error.required">Give your pizza a description.</span>
+                <span ng-show="pizzeriaController.newPizzaForm.description.$error.minlength">Pizza description needs to be at least 5 characters long.</span>
+                <span ng-show="pizzeriaController.newPizzaForm.description.$error.maxlength">Pizza description can't be more than 50 characters long.</span>
+              </div>
+            </div>
+            <div>
+              <label ng-repeat="ingredient in pizzeriaController.ingredients">
+                <input type="checkbox" name="ingredients" value="{{ingredient.name}}" ng-model="ingredient.selected" ng-required="pizzeriaController.isAnIngredientSelected()"> {{ingredient.name}}
+              </label>
+              <div ng-show="pizzeriaController.newPizzaForm.$submitted || pizzeriaController.newPizzaForm.ingredients.$touched">
+                <span ng-show="!pizzeriaController.isAnIngredientSelected()">At least one ingredient needs to be selected.</span>
+              </div>
+            </div>
+            <div>
+              <label>
+                Base Price:
+                <select name="basePrice" ng-model="newPizza.basePrice" required>
+                  <option value="">--- Please select ---</option>
+                  <option value="5">5 euro</option>
+                  <option value="6.5">6.5 euro</option>
+                  <option value="8">8euro </option>
+                </select>
+              </label>
+              <div ng-show="pizzeriaController.newPizzaForm.$submitted || pizzeriaController.newPizzaForm.basePrice.$touched">
+                <span ng-show="pizzeriaController.newPizzaForm.basePrice.$error.required">Give your pizza a base price.</span>
+              </div>
+            </div>
+            <div>
+              <input type="submit" ng-click="pizzeriaController.onAddPizza(newPizza)" />
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="bundle.js"></script>
+</body>
+
+</html>
